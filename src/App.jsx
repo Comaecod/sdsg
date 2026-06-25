@@ -18,7 +18,7 @@ const GoshalaScreen = lazy(() => import('./components/GoshalaScreen'));
 const PushkariniScreen = lazy(() => import('./components/PushkariniScreen'));
 const BhavanScreen = lazy(() => import('./components/BhavanScreen'));
 const SchoolRedirect = lazy(() => import('./components/SchoolRedirect'));
-const VedaPatashalaHostel = lazy(() => import('./components/VedaPatashalaHostel'));
+const VedaHostel = lazy(() => import('./components/VedaHostel'));
 const GeneralHostel = lazy(() => import('./components/GeneralHostel'));
 
 const LoginScreen = lazy(() => import('./auth/components/LoginScreen'));
@@ -83,8 +83,8 @@ function App() {
           <Route path="/pushkarini" element={withLayout(PushkariniScreen)} />
           <Route path="/bhavan" element={withLayout(BhavanScreen)} />
           <Route path="/school" element={withLayout(SchoolRedirect)} />
-          <Route path="/hostel/veda-patashala" element={withLayout(VedaPatashalaHostel)} />
-          <Route path="/hostel/general" element={withLayout(GeneralHostel)} />
+          <Route path="/hostel/veda-hostel" element={<ProtectedRoute>{withLayout(VedaHostel)}</ProtectedRoute>} />
+          <Route path="/hostel/general" element={<ProtectedRoute>{withLayout(GeneralHostel)}</ProtectedRoute>} />
           <Route path="/panchangam" element={withLayout(PanchangamScreen)} />
           <Route path="/about-shankaracharya" element={withLayout(AboutShankaracharya)} />
           <Route path="/gallery" element={withLayout(GalleryScreen)} />

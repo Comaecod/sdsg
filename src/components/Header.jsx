@@ -20,7 +20,7 @@ const PUBLIC_NAV_ITEMS = [
     label: 'Hostels',
     icon: '🏘️',
     children: [
-      { to: '/hostel/veda-patashala', icon: '📿', label: 'Veda Patashala' },
+      { to: '/hostel/veda-hostel', icon: '📿', label: 'Veda Hostel' },
       { to: '/hostel/general', icon: '👥', label: 'General Hostel' },
     ]
   },

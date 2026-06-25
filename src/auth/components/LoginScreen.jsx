@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function LoginScreen() {
+  const { loginWithEmail, loginWithGoogle, sendSignInLink, error, clearError } = useAuth();
+
+  useEffect(() => { clearError(); }, [clearError]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [localError, setLocalError] = useState('');
   const [linkSent, setLinkSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { loginWithEmail, loginWithGoogle, sendSignInLink, error, clearError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/dashboard';

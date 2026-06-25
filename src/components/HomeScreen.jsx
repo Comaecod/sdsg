@@ -125,7 +125,7 @@ const HomeScreen = () => {
     { icon: '🐄', title: 'Goshala', description: 'Sacred cow shelter preserving indigenous breeds', to: '/goshala' },
     { icon: '🌊', title: 'Pushkarini', description: 'Temple pond with Nakshatra Vanam', to: '/pushkarini' },
     { icon: '🏠', title: 'Bhavan', description: 'Campus guest house for visitors and devotees', to: '/bhavan' },
-    { icon: '📿', title: 'Veda Patashala', description: 'Sri Kanchi Kamakoti Triveni Vidyarthi Vasati Gruham', to: '/hostel/veda-patashala' },
+    { icon: '📿', title: 'Veda Hostel', description: 'Sri Kanchi Kamakoti Triveni Vidyarthi Vasati Gruham', to: '/hostel/veda-hostel' },
     { icon: '👥', title: 'General Hostel', description: 'Guru Priya Vidyarthi Vasati Gruham', to: '/hostel/general' },
     { icon: '🌳', title: 'Green Campus', description: '34-acre campus with gardens and sacred groves' },
     { icon: '🛕', title: 'Spiritual Living', description: 'Daily rituals, Vedic studies & spiritual practices' },

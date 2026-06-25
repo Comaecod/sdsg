@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
       setLoading(true); setUser(firebaseUser);
       if (firebaseUser && !profileLoadAttempted.current) {
         profileLoadAttempted.current = true; await fetchUserProfile(firebaseUser);
-      } else if (!firebaseUser) { setUserProfile(null); setPermissions([]); profileLoadAttempted.current = false; }
+      } else if (!firebaseUser) { setUserProfile(null); setPermissions([]); setError(null); profileLoadAttempted.current = false; }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -49,32 +49,33 @@ export function AuthProvider({ children }) {
 
   const refreshProfile = useCallback(async () => { if (user) { profileLoadAttempted.current = true; await fetchUserProfile(user); } }, [user, fetchUserProfile]);
 
+  const onLoginSuccess = useCallback(async (firebaseUser) => {
+    profileLoadAttempted.current = false; await fetchUserProfile(firebaseUser);
+    userService.updateLastLogin(firebaseUser.uid).catch(() => {});
+    auditService.log(AUDIT_ACTIONS.LOGIN, firebaseUser.uid, { userEmail: firebaseUser.email }).catch(() => {});
+    return firebaseUser;
+  }, [fetchUserProfile]);
+
   const loginWithEmail = useCallback(async (email, password) => {
     setError(null);
     try {
       const firebaseUser = await authService.signInWithEmail(email, password);
-      await userService.updateLastLogin(firebaseUser.uid);
-      profileLoadAttempted.current = false; await fetchUserProfile(firebaseUser);
-      auditService.log(AUDIT_ACTIONS.LOGIN, firebaseUser.uid, { userEmail: email });
-      return firebaseUser;
+      return await onLoginSuccess(firebaseUser);
     } catch (err) { const message = getAuthErrorMessage(err.code); setError(message); throw err; }
-  }, [fetchUserProfile]);
+  }, [onLoginSuccess]);
 
   const loginWithGoogle = useCallback(async () => {
     setError(null);
     try {
       const firebaseUser = await authService.signInWithGoogle();
-      await userService.updateLastLogin(firebaseUser.uid);
-      profileLoadAttempted.current = false; await fetchUserProfile(firebaseUser);
-      auditService.log(AUDIT_ACTIONS.LOGIN, firebaseUser.uid, { userEmail: firebaseUser.email, method: 'google' });
-      return firebaseUser;
+      return await onLoginSuccess(firebaseUser);
     } catch (err) { const message = getAuthErrorMessage(err.code); setError(message); throw err; }
-  }, [fetchUserProfile]);
+  }, [onLoginSuccess]);
 
   const logout = useCallback(async () => {
     try {
-      if (user) { await auditService.log(AUDIT_ACTIONS.LOGOUT, user.uid, { userEmail: user.email }); }
-      await authService.signOut(); setUser(null); setUserProfile(null); setPermissions([]); profileLoadAttempted.current = false;
+      if (user) { auditService.log(AUDIT_ACTIONS.LOGOUT, user.uid, { userEmail: user.email }).catch(() => {}); }
+      await authService.signOut(); setUser(null); setUserProfile(null); setPermissions([]); setError(null); profileLoadAttempted.current = false;
     } catch (err) { console.error('Logout error:', err); }
   }, [user]);
 
@@ -96,7 +97,7 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   const sendSignInLink = useCallback(async (email) => { setError(null); try { await authService.sendSignInLink(email); } catch (err) { const message = getAuthErrorMessage(err.code); setError(message); throw err; } }, []);
-  const loginWithEmailLink = useCallback(async () => { setError(null); try { const firebaseUser = await authService.signInWithEmailLink(); await userService.updateLastLogin(firebaseUser.uid); profileLoadAttempted.current = false; await fetchUserProfile(firebaseUser); await auditService.log(AUDIT_ACTIONS.LOGIN, firebaseUser.uid, { userEmail: firebaseUser.email, method: 'email_link' }); return firebaseUser; } catch (err) { const message = getAuthErrorMessage(err.code); setError(message); throw err; } }, [fetchUserProfile]);
+  const loginWithEmailLink = useCallback(async () => { setError(null); try { const firebaseUser = await authService.signInWithEmailLink(); return await onLoginSuccess(firebaseUser); } catch (err) { const message = getAuthErrorMessage(err.code); setError(message); throw err; } }, [onLoginSuccess]);
   const clearError = useCallback(() => setError(null), []);
 
   const isSuperAdmin = userProfile?.role === ROLES.SUPER_ADMIN;

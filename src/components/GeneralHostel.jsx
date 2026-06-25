@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../auth/contexts/AuthContext';
 
 const GeneralHostel = () => {
+  const { userProfile, isAuthenticated } = useAuth();
+  const residence = userProfile?.dayScholarOrHostel;
+  const hasAccess = isAuthenticated && residence === '3';
+
+  if (isAuthenticated && residence === '1') return <Navigate to="/" replace />;
+
   return (
     <div className="w-full min-h-screen">
       <div className="relative overflow-hidden">
@@ -17,23 +24,23 @@ const GeneralHostel = () => {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6 sm:p-8 mb-8">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">About the Hostel</h2>
-          <div className="space-y-3 text-gray-600 dark:text-gray-300 text-sm sm:text-base">
-            <p>The General Hostel provides comfortable residential accommodation for students of Sri Kanchi Kamakoti Sankara Vidyalaya. With modern amenities and a conducive environment for studies, the hostel ensures that students feel at home while pursuing their education.</p>
-            <ul className="space-y-2 mt-4">
-              <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Well-furnished rooms with study areas</li>
-              <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Kitchen and dining facility with nutritious meals</li>
-              <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Indoor games and recreation room</li>
-              <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> 24×7 security and warden supervision</li>
-            </ul>
-          </div>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="glass-card p-6 sm:p-8 text-center">
-          <div className="text-4xl mb-4">🔒</div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Student Details — Access Restricted</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">Detailed student information, room allocation, and schedules are available after signing in.</p>
-          <Link to="/login" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium bg-gradient-to-r from-primary to-secondary text-white hover:opacity-90 transition-all">
-            🔐 Sign in to view details
-          </Link>
+          {hasAccess ? (
+            <div className="space-y-3 text-gray-600 dark:text-gray-300 text-sm sm:text-base">
+              <p>The General Hostel provides comfortable residential accommodation for students of Sri Kanchi Kamakoti Sankara Vidyalaya. With modern amenities and a conducive environment for studies, the hostel ensures that students feel at home while pursuing their education.</p>
+              <ul className="space-y-2 mt-4">
+                <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Well-furnished rooms with study areas</li>
+                <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Kitchen and dining facility with nutritious meals</li>
+                <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> Indoor games and recreation room</li>
+                <li className="flex items-start gap-3"><span className="text-primary shrink-0">✦</span> 24×7 security and warden supervision</li>
+              </ul>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">🔒</div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Access Restricted</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">You are not authorized to view this content.</p>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>
