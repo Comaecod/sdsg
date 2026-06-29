@@ -12,6 +12,7 @@ const PanchangamScreen = lazy(() => import('./components/PanchangamScreen'));
 const AboutShankaracharya = lazy(() => import('./components/AboutShankaracharya'));
 const GalleryScreen = lazy(() => import('./components/GalleryScreen'));
 const ContactScreen = lazy(() => import('./components/ContactScreen'));
+const ExecutiveMembersScreen = lazy(() => import('./components/ExecutiveMembersScreen'));
 const FeedbackScreen = lazy(() => import('./components/FeedbackScreen'));
 const FeedbackReportsScreen = lazy(() => import('./components/FeedbackReportsScreen'));
 const GoshalaScreen = lazy(() => import('./components/GoshalaScreen'));
@@ -89,6 +90,7 @@ function App() {
           <Route path="/about-shankaracharya" element={withLayout(AboutShankaracharya)} />
           <Route path="/gallery" element={withLayout(GalleryScreen)} />
           <Route path="/contact" element={withLayout(ContactScreen)} />
+          <Route path="/people" element={withLayout(ExecutiveMembersScreen)} />
           <Route path="/feedback" element={withLayout(FeedbackScreen)} />
 
           <Route path="/login" element={
